@@ -50,6 +50,7 @@ import PokemonOptions from '@/components/PokemonOptions.vue'
 import Counter        from '@/components/Counter.vue';
 
 import getPokemonOptions from '@/helpers/getPokemonOptions'
+import getPokemonSounds from '@/helpers/getPokemonSounds'
 
 
 export default {
@@ -91,9 +92,11 @@ export default {
             if ( selectedId === this.pokemon.id ) {
                 this.message = `Correcto!, ${ this.pokemon.name }`
                 this.counter += 100;
+                getPokemonSounds('OK')
             }
             else {
                 this.message = `Ooops!, era ${ this.pokemon.name }`
+                getPokemonSounds('KO')
             }
 
             this.disabledLi = 1
