@@ -2,7 +2,9 @@
     <div class="container">
         <div class="row">
             <div class="col-3">
-                <h1>Marcador:</h1>
+                <Vidas
+                    :vidas="vidas"
+                />
             </div>
             <div class="col-6">
                 <h1 v-if="!pokemon">Espere por favor...</h1>
@@ -48,18 +50,21 @@
 import PokemonPicture from '@/components/PokemonPicture.vue'
 import PokemonOptions from '@/components/PokemonOptions.vue'
 import Counter        from '@/components/Counter.vue';
+import Vidas          from '@/components/Vidas.vue';
 
 import getPokemonOptions from '@/helpers/getPokemonOptions'
-import getPokemonSounds from '@/helpers/getPokemonSounds'
+import getPokemonSounds  from '@/helpers/getPokemonSounds'
+
+
 
 
 export default {
     components: {
         PokemonPicture,
         PokemonOptions,
-        Counter
+        Counter,
+        Vidas
     },
-
     data() {
         return {
             pokemonArr:  [],
@@ -71,9 +76,11 @@ export default {
             messageTry:  '',
             counter:     0,
             disabledLi:  0,
+            okSeguidos:  0,
+            koSeguidos:  0,
+            vidas:       3,
         }
     },
-
     methods: {
         async mixPokemonArray() {
             
@@ -92,18 +99,50 @@ export default {
             if ( selectedId === this.pokemon.id ) {
                 this.message = `Correcto!, ${ this.pokemon.name }`
                 this.counter += 100;
+                this.calculaVidas('OK')
                 getPokemonSounds('OK')
             }
             else {
                 this.message = `Ooops!, era ${ this.pokemon.name }`
+                this.calculaVidas('KO')
                 getPokemonSounds('KO')
             }
 
             this.disabledLi = 1
 
-            this.newTry(5)
+            if ( this.vidas > 0) {
+                this.newTry(5)
+            }
+            else {
+                this.showNewGame = true
+            }
+            
 
             // console.log('Pokemon page llamado con la seleccion: '+selectedId)
+        },
+        calculaVidas( acierto ) {
+            switch (acierto) {
+                case 'OK':
+                    this.okSeguidos += 1
+                    this.koSeguidos = 0
+                    if ( this.okSeguidos === 3 ) {
+                        this.vidas += 1
+                        this.okSeguidos = 0
+                    }
+                    break
+
+                case 'KO':
+                    this.okSeguidos = 0
+                    this.koSeguidos += 1
+                    if ( this.koSeguidos === 3 ) {
+                        this.vidas -= 1
+                        this.koSeguidos = 0
+                    }
+                    break
+            
+                default:
+                    break
+            }
         },
         newTry( seconds ) {
             if ( seconds > 0) {
@@ -111,7 +150,12 @@ export default {
                 setTimeout( this.newTry, 1000, seconds - 1 )
             } else {
                 this.messageTry = ''
-                this.newGame()
+                this.pokemonArr  = []
+                this.pokemon     = null
+                this.showPokemon = false
+                this.showAnswer  = false
+                this.disabledLi  = 0
+                this.mixPokemonArray()
             }
         }
         ,
@@ -121,6 +165,11 @@ export default {
             this.showPokemon = false
             this.showAnswer  = false
             this.disabledLi  = 0
+            this.counter     = 0
+            this.disabledLi  = 0
+            this.okSeguidos  = 0
+            this.koSeguidos  = 0
+            this.vidas       = 3
             this.mixPokemonArray()
         }
 
