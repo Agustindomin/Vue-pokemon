@@ -25,11 +25,17 @@
                     <template v-if="showAnswer">
                         <h2 class="fade-in">{{ message }}</h2>
                         <h3 class="fade-in text-success">{{ messageTry }}</h3>
-                        <button v-if="showNewGame"
+                        <div
+                            v-if="showNewGame"
+                        >
+                        <h2>No hay más Vidas!, <b>Game over</b></h2>
+                        <button 
                             @click="newGame"
                         >
                             Nuevo juego
                         </button>
+                        </div>
+                        
                     </template>
                 
                 </div>
@@ -190,8 +196,10 @@ button {
     border: 1px solid white;
     color: white;
     cursor: pointer;
+    font-size: 24px;
+    font-weight: bold;
     margin: 0 5px;
-    padding: 5px 15px;
+    padding: 10px 30px;
     transition: 0.3s ease-in-out;
 }
 
