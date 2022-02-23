@@ -22,3 +22,6 @@ npm run test:unit
 
 ### Customize configuration
 See [Configuration Reference](https://cli.vuejs.org/config/).
+
+### Deploy Site ###
+Url: https://pokemon-vue-site.netlify.app/
